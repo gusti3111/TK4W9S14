@@ -11,7 +11,7 @@ struct Book {
 };
 
 // Fungsi untuk membaca data buku dari file
-void read_books(struct Book *books, int *numBooks) {
+void baca_buku(struct Book *books, int *numBooks) {
     FILE *file = fopen("databuku.txt", "r");
     if (file != NULL) {
         while (fscanf(file, "%s %s %s %d", books[*numBooks].code, books[*numBooks].nama,
@@ -30,16 +30,6 @@ void write_books(struct Book *books, int numBooks) {
     }
     fclose(file);
 }
-
-// Fungsi untuk menampilkan data buku
-void view_books(struct Book *books, int numBooks) {
-    printf("Data Buku:\n");
-    for (int i = 0; i < numBooks; i++) {
-        printf("%d. Kode: %s, Nama: %s, Jenis: %s, Harga: %d\n", i + 1, books[i].code, books[i].nama,
-               books[i].jenis, books[i].harga);
-    }
-}
-
 // Fungsi untuk menampilkan data transaksi
 void view_history() {
     FILE *file = fopen("history.txt", "r");
@@ -69,6 +59,45 @@ void input_book(struct Book *books, int *numBooks) {
     write_books(books, *numBooks);
     printf("Data Buku berhasil ditambahkan.\n");
 }
+// Fungsi untuk menampilkan data buku
+void views_books(struct Book *books, int numBooks) {
+    printf("Data Buku:\n");
+    // lakukan pengulangan sampai terlihat berapa sampai batas data buku yang yang ada di databuku.t
+    for (int i = 0; i < numBooks; i++) {
+        printf("%d. Kode: %s, Nama: %s, Jenis: %s, Harga: %d\n", i + 1, books[i].code, books[i].nama,
+               books[i].jenis, books[i].harga);
+    }
+}
+// Fungsi untuk menghapus data buku
+void delete_book(struct Book *books, int *numBooks) {
+    views_books(books, *numBooks);
+
+    if (*numBooks > 0) {
+        int index;
+        printf("Masukkan index data buku yang ingin dihapus: ");
+        scanf("%d", &index);
+
+        if (index >= 1 && index <= *numBooks) {
+            // Menggeser data untuk menutupi data yang akan dihapus
+            for (int i = index - 1; i < *numBooks - 1; i++) {
+                strcpy(books[i].code, books[i + 1].code);
+                strcpy(books[i].nama, books[i + 1].nama);
+                strcpy(books[i].jenis, books[i + 1].jenis);
+                books[i].harga = books[i + 1].harga;
+            }
+            // hapus buku berdasarkan index
+            (*numBooks)--;
+            write_books(books, *numBooks);
+            printf("Data Buku berhasil dihapus.\n");
+        } else {
+            printf("Index tidak valid.\n");
+        }
+    } else {
+        printf("Tidak ada data buku.\n");
+    }
+}
+
+
 
 // Fungsi untuk menghapus data transaksi
 void delete_history() {
@@ -121,7 +150,7 @@ int main() {
     struct Book books[100];
     int numBooks = 0;
 
-    read_books(books, &numBooks);
+    baca_buku(books, &numBooks);
 
     while (1) {
         printf("\nMenu:\n");
@@ -129,7 +158,8 @@ int main() {
         printf("2. View History Transaksi\n");
         printf("3. View Data Buku\n");
         printf("4. Delete History Transaksi\n");
-        printf("5. Exit\n");
+        printf("5. Delete data Buku\n");
+        printf("6. Exit\n");
 
         int choice;
         printf("Pilih menu (1-5): ");
@@ -143,12 +173,16 @@ int main() {
                 view_history();
                 break;
             case 3:
-                view_books(books, numBooks);
+                views_books(books, numBooks);
                 break;
             case 4:
                 delete_history();
                 break;
             case 5:
+                delete_book(books, &numBooks);
+                printf("Data Buku berhasil dihapus.\n");
+                break;
+            case 6:
                 write_books(books, numBooks);
                 printf("Data Buku berhasil disimpan.\n");
                 exit(0);
