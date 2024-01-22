@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Struktur untuk menyimpan informasi buku
+// Struktur untuk menyimpan informasi buku yang akan di  olah menjadi file databuku.txt
 struct Book {
-    char kode[20];
+    char code[20];
     char nama[50];
     char jenis[30];
     int harga;
@@ -14,7 +14,7 @@ struct Book {
 void read_books(struct Book *books, int *numBooks) {
     FILE *file = fopen("databuku.txt", "r");
     if (file != NULL) {
-        while (fscanf(file, "%s %s %s %d", books[*numBooks].kode, books[*numBooks].nama,
+        while (fscanf(file, "%s %s %s %d", books[*numBooks].code, books[*numBooks].nama,
                       books[*numBooks].jenis, &books[*numBooks].harga) != EOF) {
             (*numBooks)++;
         }
@@ -26,7 +26,7 @@ void read_books(struct Book *books, int *numBooks) {
 void write_books(struct Book *books, int numBooks) {
     FILE *file = fopen("databuku.txt", "w");
     for (int i = 0; i < numBooks; i++) {
-        fprintf(file, "%s %s %s %d\n", books[i].kode, books[i].nama, books[i].jenis, books[i].harga);
+        fprintf(file, "%s %s %s %d\n", books[i].code, books[i].nama, books[i].jenis, books[i].harga);
     }
     fclose(file);
 }
@@ -35,7 +35,7 @@ void write_books(struct Book *books, int numBooks) {
 void view_books(struct Book *books, int numBooks) {
     printf("Data Buku:\n");
     for (int i = 0; i < numBooks; i++) {
-        printf("%d. Kode: %s, Nama: %s, Jenis: %s, Harga: %d\n", i + 1, books[i].kode, books[i].nama,
+        printf("%d. Kode: %s, Nama: %s, Jenis: %s, Harga: %d\n", i + 1, books[i].code, books[i].nama,
                books[i].jenis, books[i].harga);
     }
 }
@@ -57,7 +57,7 @@ void view_history() {
 // Fungsi untuk input data buku
 void input_book(struct Book *books, int *numBooks) {
     printf("Masukkan Kode Buku: ");
-    scanf("%s", books[*numBooks].kode);
+    scanf("%s", books[*numBooks].code);
     printf("Masukkan Nama Buku: ");
     scanf("%s", books[*numBooks].nama);
     printf("Masukkan Jenis Buku: ");
